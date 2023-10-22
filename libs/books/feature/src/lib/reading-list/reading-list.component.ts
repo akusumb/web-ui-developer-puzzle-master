@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { getReadingList, removeFromReadingList } from '@tmo/books/data-access';
+import { getReadingList, removeFromReadingList, updateFromReadingList, updateFinishedReadingList } from '@tmo/books/data-access';
+import { map } from 'rxjs/operators';
 
 @Component({
   selector: 'tmo-reading-list',
@@ -14,5 +15,11 @@ export class ReadingListComponent {
 
   removeFromReadingList(item) {
     this.store.dispatch(removeFromReadingList({ item }));
+  }
+
+  updateFromReadingList(item, id) {
+    document.getElementById(id).innerText = "Finished At: " + new Date().toISOString();
+    item = Object.assign({bookId: item.id, finishedDate: new Date().toISOString()}, item);
+    this.store.dispatch(updateFinishedReadingList({ item }));
   }
 }
