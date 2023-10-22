@@ -4,9 +4,9 @@
       <img class="reading-list-item--cover" [src]="b.coverUrl" />
     </div>
     <div class="reading-list-item--details">
-      <strong class="reading-list-item--details--title">{{ b.title }}</strong>
+      <strong class="reading-list-item--details--title">{{ b.title || '--' }}</strong>
       <div class="reading-list-item--details--author">
-        {{ b.authors.join(',') }}
+        {{ (b && b.authors ) ? b.authors.join(','): 'No Auther Found' }}
       </div>
     </div>
     <div>

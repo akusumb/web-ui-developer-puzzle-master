@@ -11,11 +11,13 @@ import { MatBadgeModule } from '@angular/material/badge';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { TotalCountComponent } from './total-count/total-count.component';
 import { ReadingListComponent } from './reading-list/reading-list.component';
+import { SnakBarComponent } from './snakbar/snakbar.component';
 
 const EXPORTS = [
   BookSearchComponent,
   TotalCountComponent,
-  ReadingListComponent
+  ReadingListComponent,
+  SnakBarComponent
 ];
 
 @NgModule({
@@ -34,6 +36,9 @@ const EXPORTS = [
     BooksDataAccessModule
   ],
   exports: [...EXPORTS],
-  declarations: [...EXPORTS]
+  declarations: [...EXPORTS],
+  entryComponents: [
+    SnakBarComponent
+  ]
 })
 export class BooksFeatureModule {}

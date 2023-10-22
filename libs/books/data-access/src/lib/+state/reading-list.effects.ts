@@ -5,6 +5,9 @@ import { of } from 'rxjs';
 import { catchError, concatMap, exhaustMap, map } from 'rxjs/operators';
 import { ReadingListItem } from '@tmo/shared/models';
 import * as ReadingListActions from './reading-list.actions';
+import { MatSnackBar, MatSnackBarConfig} from '@angular/material/snack-bar';
+
+import { SnakBarComponent } from '../../../../../../libs/books/feature/src/lib/snakbar/snakbar.component'
 
 @Injectable()
 export class ReadingListEffects implements OnInitEffects {
@@ -29,7 +32,9 @@ export class ReadingListEffects implements OnInitEffects {
       ofType(ReadingListActions.addToReadingList),
       concatMap(({ book }) =>
         this.http.post('/api/reading-list', book).pipe(
-          map(() => ReadingListActions.confirmedAddToReadingList({ book })),
+          map(() => {
+            this.snakb("added", book, 'delete');
+            return ReadingListActions.confirmedAddToReadingList({ book }); }),
           catchError(() =>
             of(ReadingListActions.failedAddToReadingList({ book }))
           )
@@ -44,7 +49,9 @@ export class ReadingListEffects implements OnInitEffects {
       concatMap(({ item }) =>
         this.http.delete(`/api/reading-list/${item.bookId}`).pipe(
           map(() =>
-            ReadingListActions.confirmedRemoveFromReadingList({ item })
+            {
+              this.snakb("removed", item, 'add');
+              return ReadingListActions.confirmedRemoveFromReadingList({ item })}
           ),
           catchError(() =>
             of(ReadingListActions.failedRemoveFromReadingList({ item }))
@@ -57,6 +64,25 @@ export class ReadingListEffects implements OnInitEffects {
   ngrxOnInitEffects() {
     return ReadingListActions.init();
   }
+  
+  snakb(text, book, type) {
+    if(book && book.id) {
+      //book.bookId = book.id;
+      book = Object.assign({bookId: book.id}, book);
+    }
+    //book.bookId = book && book.id ? book.id: null;
+    //this.snakbar.openFromComponent(text, 'Undo')
+    let configSuccess: MatSnackBarConfig = {
+      panelClass: 'style-success',
+      duration: 10000,
+      horizontalPosition: 'right',
+      verticalPosition: 'bottom'
+    };
+    this.snakbar.openFromComponent(SnakBarComponent, {
+      data: {text: text, book: book, type: type},
+      ...configSuccess
+    });
+  }
 
-  constructor(private actions$: Actions, private http: HttpClient) {}
+  constructor(private actions$: Actions, private http: HttpClient, private snakbar: MatSnackBar) {}
 }
