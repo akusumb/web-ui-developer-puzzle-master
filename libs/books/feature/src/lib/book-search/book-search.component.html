@@ -7,25 +7,25 @@
       placeholder="Search for books to add to your reading list"
       formControlName="term"
     />
-    <button mat-icon-button matSuffix>
+    <button mat-icon-button matSuffix aria-label="search">
       <mat-icon>search</mat-icon>
     </button>
   </mat-form-field>
 </form>
 
 <ng-container *ngIf="searchTerm; else empty">
-  <div class="book-grid">
+  <div class="book-grid" *ngIf="(books && books.length); else empty">
     <div class="book" data-testing="book-item" *ngFor="let b of books">
       <div class="book--title">
-        {{ b.title }}
+        {{ b.title || 'No title found'}}
       </div>
       <div class="book--content">
         <div class="book--content--cover">
-          <img src="{{ b.coverUrl }}" />
+          <img src="{{ b.coverUrl }}" alt="covert-image" />
         </div>
         <div class="book--content--info">
-          <div><strong>Author:</strong> {{ b.authors.join(',') }}</div>
-          <div><strong>Publisher:</strong> {{ b.publisher }}</div>
+          <div><strong>Author:</strong> {{  (b && b.authors) ? b.authors.join(','): 'No Author Found' }}</div>
+          <div><strong>Publisher:</strong> {{ b && b.publisher ? b.publisher : 'No Publisher Found' }}</div>
           <div>
             <strong>Published:</strong> {{ formatDate(b.publishedDate) }}
           </div>
