@@ -28,7 +28,7 @@ export class BookSearchComponent implements OnInit {
   ) {}
 
   get searchTerm(): string {
-    return this.searchForm.value.term;
+    return this.searchForm.get('term').value;
   }
 
   ngOnInit(): void {
@@ -40,7 +40,7 @@ export class BookSearchComponent implements OnInit {
   formatDate(date: void | string) {
     return date
       ? new Intl.DateTimeFormat('en-US').format(new Date(date))
-      : undefined;
+      :  'No timestamp found';
   }
 
   addBookToReadingList(book: Book) {
